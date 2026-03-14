@@ -10,38 +10,35 @@
 
 <h1>我的網址收藏</h1>
 
+<!-- 新增網址 -->
+<div class="form">
+    <input id="name" type="text" placeholder="名稱（例如：YouTube）">
+    <input id="url" type="url" placeholder="網址（例如：https://www.youtube.com）">
+    <button id="addBtn">新增</button>
+</div>
+
+<!-- 新增資料夾 -->
+<div class="form">
+    <input id="newFolder" type="text" placeholder="新增資料夾名稱">
+    <button id="addFolderBtn">新增資料夾</button>
+</div>
+
+<!-- 主畫面：資料夾 + 未分類 -->
 <div id="folderView">
     <h2>資料夾</h2>
-
-    <div class="form">
-        <input id="newFolder" type="text" placeholder="新增資料夾名稱">
-        <button id="addFolderBtn">新增資料夾</button>
-    </div>
-
     <ul id="folderList"></ul>
 
     <h2>未分類網址</h2>
     <ul id="uncategorizedList"></ul>
 </div>
 
+<!-- 資料夾內頁 -->
 <div id="linkView" style="display:none;">
     <h2 id="currentFolderTitle"></h2>
 
-    <div class="form">
-        <input id="renameFolder" type="text" placeholder="重新命名資料夾">
-        <button id="renameFolderBtn">重新命名</button>
-        <button id="deleteFolderBtn">刪除資料夾</button>
-        <button id="backBtn">返回</button>
-    </div>
-
-    <h3>新增網址</h3>
-    <div class="form">
-        <input id="name" type="text" placeholder="名稱">
-        <input id="url" type="url" placeholder="網址">
-        <button id="addBtn">新增網址</button>
-    </div>
-
     <ul id="list"></ul>
+
+    <button id="backBtn">返回</button>
 </div>
 
 <script src="script.js"></script>
