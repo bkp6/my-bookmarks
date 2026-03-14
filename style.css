@@ -27,6 +27,11 @@ button {
     cursor: pointer;
 }
 
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
 #list {
     list-style: none;
     padding: 0;
