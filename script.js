@@ -49,15 +49,15 @@ function saveLinks(folder, links) {
 }
 
 
-// 更新按鈕啟用狀態
+// ⭐ 更新按鈕啟用狀態（核心）
 function updateFolderButtons() {
-    const hasFolder = folderSelect.value !== "";
+    const hasFolder = folderSelect.value && folderSelect.value.trim() !== "";
     renameFolderBtn.disabled = !hasFolder;
     deleteFolderBtn.disabled = !hasFolder;
 }
 
 
-// 渲染資料夾下拉選單（修正版）
+// ⭐ 渲染資料夾（核心修正）
 function renderFolders() {
     const folders = loadFolders();
     folderSelect.innerHTML = "";
@@ -69,7 +69,7 @@ function renderFolders() {
         folderSelect.appendChild(opt);
     });
 
-    // ⭐ 自動選第一個資料夾（關鍵修正）
+    // ⭐ 自動選中第一個資料夾（最重要）
     if (folders.length > 0) {
         folderSelect.value = folders[0];
     }
@@ -186,7 +186,7 @@ deleteFolderBtn.addEventListener("click", () => {
 });
 
 
-// ⭐ 當使用者手動選擇資料夾時，按鈕會亮起
+// ⭐ 使用者切換資料夾時更新按鈕
 folderSelect.addEventListener("change", updateFolderButtons);
 
 
