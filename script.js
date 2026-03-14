@@ -140,6 +140,13 @@ addBtn.addEventListener("click", () => {
     }
 
     const links = loadLinks(folder);
+
+    // 禁止同資料夾內重複名稱
+    if (links.some(item => item.name === name)) {
+        alert("此資料夾內已存在相同名稱");
+        return;
+    }
+
     links.push({ name: name || url, url });
     saveLinks(folder, links);
 
