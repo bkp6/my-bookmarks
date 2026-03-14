@@ -62,6 +62,14 @@ addBtn.addEventListener("click", () => {
   }
 
   const links = loadLinks();
+
+  // 🔥 新增：避免相同名稱重複
+  const exists = links.some(item => item.name === name);
+  if (exists) {
+    alert("這個名稱已經存在，請換一個名稱！");
+    return;
+  }
+
   links.push({ name: name || url, url });
   saveLinks(links);
 
