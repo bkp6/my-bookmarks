@@ -31,7 +31,7 @@ function render() {
     a.href = item.url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
-    a.textContent = item.name || item.url;
+    a.textContent = item.name;
 
     const delBtn = document.createElement("button");
     delBtn.textContent = "刪除";
@@ -49,11 +49,16 @@ function render() {
 }
 
 addBtn.addEventListener("click", () => {
-  const name = nameInput.value.trim();
+  let name = nameInput.value.trim();
   let url = urlInput.value.trim();
 
+  if (!name) {
+    alert("請輸入名稱！");
+    return;
+  }
+
   if (!url) {
-    alert("請輸入網址");
+    alert("請輸入網址！");
     return;
   }
 
@@ -63,14 +68,14 @@ addBtn.addEventListener("click", () => {
 
   const links = loadLinks();
 
-  // 🔥 新增：避免相同名稱重複
+  // 🔥 名稱重複檢查（現在會正常運作）
   const exists = links.some(item => item.name === name);
   if (exists) {
     alert("這個名稱已經存在，請換一個名稱！");
     return;
   }
 
-  links.push({ name: name || url, url });
+  links.push({ name, url });
   saveLinks(links);
 
   nameInput.value = "";
