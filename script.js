@@ -1,73 +1,85 @@
-const LIST_KEY = "my_links_all";
+const STORAGE_KEY = "my_links";
 
 const nameInput = document.getElementById("name");
 const urlInput = document.getElementById("url");
 const addBtn = document.getElementById("addBtn");
 const listEl = document.getElementById("list");
 
-// 讀取網址
 function loadLinks() {
-    const raw = localStorage.getItem(LIST_KEY);
-    if (!raw) return [];
-    try { return JSON.parse(raw); } catch { return []; }
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
 }
 
-// 儲存網址
 function saveLinks(links) {
-    localStorage.setItem(LIST_KEY, JSON.stringify(links));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
 }
 
-// 渲染網址列表
-function renderLinks() {
-    const links = loadLinks();
-    listEl.innerHTML = "";
+function render() {
+  const links = loadLinks();
+  listEl.innerHTML = "";
 
-    links.forEach((item, index) => {
-        const li = document.createElement("li");
-        li.className = "item";
+  links.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.className = "item";
 
-        const a = document.createElement("a");
-        a.href = item.url;
-        a.target = "_blank";
-        a.textContent = item.name || item.url;
+    const a = document.createElement("a");
+    a.href = item.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = item.name;
 
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "刪除";
-        delBtn.onclick = () => {
-            const updated = loadLinks();
-            updated.splice(index, 1);
-            saveLinks(updated);
-            renderLinks();
-        };
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "刪除";
+    delBtn.onclick = () => {
+      const updated = loadLinks();
+      updated.splice(index, 1);
+      saveLinks(updated);
+      render();
+    };
 
-        li.appendChild(a);
-        li.appendChild(delBtn);
-        listEl.appendChild(li);
-    });
+    li.appendChild(a);
+    li.appendChild(delBtn);
+    listEl.appendChild(li);
+  });
 }
 
-// 新增網址
-addBtn.onclick = () => {
-    let name = nameInput.value.trim();
-    let url = urlInput.value.trim();
+addBtn.addEventListener("click", () => {
+  let name = nameInput.value.trim();
+  let url = urlInput.value.trim();
 
-    if (!url) return alert("請輸入網址");
-    if (!url.startsWith("http")) url = "https://" + url;
+  if (!name) {
+    alert("請輸入名稱！");
+    return;
+  }
 
-    const links = loadLinks();
+  if (!url) {
+    alert("請輸入網址！");
+    return;
+  }
 
-    if (links.some(item => item.name === name)) {
-        return alert("名稱重複");
-    }
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = "https://" + url;
+  }
 
-    links.push({ name: name || url, url });
-    saveLinks(links);
+  const links = loadLinks();
 
-    nameInput.value = "";
-    urlInput.value = "";
+  const exists = links.some(item => item.name === name);
+  if (exists) {
+    alert("這個名稱已經存在，請換一個名稱！");
+    return;
+  }
 
-    renderLinks();
-};
+  links.push({ name, url });
+  saveLinks(links);
 
-// 初始化
-renderLinks();
+  nameInput.value = "";
+  urlInput.value = "";
+  render();
+});
+
+render();
