@@ -1,6 +1,9 @@
 const FOLDER_KEY = "my_folders";
+const UNCATEGORIZED = "_uncategorized_";
 
 const folderList = document.getElementById("folderList");
+const uncategorizedList = document.getElementById("uncategorizedList");
+
 const folderView = document.getElementById("folderView");
 const linkView = document.getElementById("linkView");
 
@@ -64,6 +67,38 @@ function renderFolders() {
         li.appendChild(span);
         folderList.appendChild(li);
     });
+
+    renderUncategorized();
+}
+
+
+// 顯示未分類網址
+function renderUncategorized() {
+    const links = loadLinks(UNCATEGORIZED);
+    uncategorizedList.innerHTML = "";
+
+    links.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = "item";
+
+        const a = document.createElement("a");
+        a.href = item.url;
+        a.target = "_blank";
+        a.textContent = item.name || item.url;
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "刪除";
+        delBtn.onclick = () => {
+            const updated = loadLinks(UNCATEGORIZED);
+            updated.splice(index, 1);
+            saveLinks(UNCATEGORIZED, updated);
+            renderUncategorized();
+        };
+
+        li.appendChild(a);
+        li.appendChild(delBtn);
+        uncategorizedList.appendChild(li);
+    });
 }
 
 
@@ -87,7 +122,7 @@ backBtn.onclick = () => {
 };
 
 
-// 渲染網址列表
+// 渲染資料夾內網址
 function renderLinks() {
     const links = loadLinks(currentFolder);
     listEl.innerHTML = "";
@@ -171,7 +206,7 @@ deleteFolderBtn.onclick = () => {
 };
 
 
-// 新增網址
+// 新增網址（可選資料夾或未分類）
 addBtn.onclick = () => {
     let name = nameInput.value.trim();
     let url = urlInput.value.trim();
