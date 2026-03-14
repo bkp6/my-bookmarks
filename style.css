@@ -33,7 +33,7 @@ ul {
     margin: 0;
 }
 
-.item, .folder-item {
+.folder-item, .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
