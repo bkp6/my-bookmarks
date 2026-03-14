@@ -16,6 +16,8 @@ const nameInput = document.getElementById("name");
 const urlInput = document.getElementById("url");
 const addBtn = document.getElementById("addBtn");
 
+const folderSelect = document.getElementById("folderSelect");
+
 const listEl = document.getElementById("list");
 const backBtn = document.getElementById("backBtn");
 
@@ -51,8 +53,10 @@ function saveLinks(folder, links) {
 function renderFolders() {
     const folders = loadFolders();
     folderList.innerHTML = "";
+    folderSelect.innerHTML = `<option value="_none_">不加入資料夾（未分類）</option>`;
 
     folders.forEach(folder => {
+        // 主畫面資料夾列表
         const li = document.createElement("li");
         li.className = "folder-item";
 
@@ -76,6 +80,12 @@ function renderFolders() {
         li.appendChild(deleteBtn);
 
         folderList.appendChild(li);
+
+        // 新增網址時的選單
+        const opt = document.createElement("option");
+        opt.value = folder;
+        opt.textContent = folder;
+        folderSelect.appendChild(opt);
     });
 
     renderUncategorized();
@@ -213,27 +223,31 @@ function deleteFolder(folder) {
 }
 
 
-// 新增網址（自動存到未分類）
+// 新增網址（可選資料夾或未分類）
 addBtn.onclick = () => {
     let name = nameInput.value.trim();
     let url = urlInput.value.trim();
+    let folder = folderSelect.value;
 
     if (!url) return alert("請輸入網址");
     if (!url.startsWith("http")) url = "https://" + url;
 
-    const links = loadLinks(UNCATEGORIZED);
+    if (folder === "_none_") folder = UNCATEGORIZED;
+
+    const links = loadLinks(folder);
 
     if (links.some(item => item.name === name)) {
         return alert("名稱重複");
     }
 
     links.push({ name: name || url, url });
-    saveLinks(UNCATEGORIZED, links);
+    saveLinks(folder, links);
 
     nameInput.value = "";
     urlInput.value = "";
 
-    renderUncategorized();
+    if (folder === UNCATEGORIZED) renderUncategorized();
+    else if (folder === currentFolder) renderLinks();
 };
 
 
