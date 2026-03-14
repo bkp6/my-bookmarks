@@ -49,7 +49,15 @@ function saveLinks(folder, links) {
 }
 
 
-// 渲染資料夾下拉選單
+// 更新按鈕啟用狀態
+function updateFolderButtons() {
+    const hasFolder = folderSelect.value !== "";
+    renameFolderBtn.disabled = !hasFolder;
+    deleteFolderBtn.disabled = !hasFolder;
+}
+
+
+// 渲染資料夾下拉選單（修正版）
 function renderFolders() {
     const folders = loadFolders();
     folderSelect.innerHTML = "";
@@ -61,17 +69,13 @@ function renderFolders() {
         folderSelect.appendChild(opt);
     });
 
+    // ⭐ 自動選第一個資料夾（關鍵修正）
+    if (folders.length > 0) {
+        folderSelect.value = folders[0];
+    }
+
     updateFolderButtons();
     renderLinks();
-}
-
-
-// 更新按鈕啟用狀態
-function updateFolderButtons() {
-    const hasFolder = folderSelect.value !== "";
-
-    renameFolderBtn.disabled = !hasFolder;
-    deleteFolderBtn.disabled = !hasFolder;
 }
 
 
@@ -151,12 +155,10 @@ renameFolderBtn.addEventListener("click", () => {
         return;
     }
 
-    // 修改資料夾名稱
     const index = folders.indexOf(oldName);
     folders[index] = newName;
     saveFolders(folders);
 
-    // 搬移網址資料
     const oldLinks = loadLinks(oldName);
     localStorage.removeItem("my_links_" + oldName);
     saveLinks(newName, oldLinks);
@@ -170,7 +172,7 @@ renameFolderBtn.addEventListener("click", () => {
 deleteFolderBtn.addEventListener("click", () => {
     const folder = folderSelect.value;
 
-    if (!confirm(`確定要刪除資料夾「${folder}」嗎？（裡面的網址也會一起刪除）`)) {
+    if (!confirm(`確定要刪除資料夾「${folder}」嗎？`)) {
         return;
     }
 
@@ -184,7 +186,7 @@ deleteFolderBtn.addEventListener("click", () => {
 });
 
 
-// 當選擇資料夾時更新按鈕狀態
+// ⭐ 當使用者手動選擇資料夾時，按鈕會亮起
 folderSelect.addEventListener("change", updateFolderButtons);
 
 
